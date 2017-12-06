@@ -3,6 +3,8 @@
 #include <math.h>
 #include <time.h>
 
+
+
 #define CARDS_PER_PLAYER 13
 #define MAX_PALYERS 13
 #define CARDS_IN_DECK 13
@@ -12,7 +14,7 @@
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/
 typedef struct Card{
-    char name[5];
+    char card[4];
     int value;
 } Card;
 
@@ -30,7 +32,7 @@ void main(){
     srand( time(NULL) ); // random seed
 
     int palyers;
-    printf("Enter number of players: ");
+    printf("Enter number of players 🂱, : ");
     scanf("%d", &palyers);
 
     Card cardsOnDesk[MAX_PALYERS];
@@ -44,10 +46,9 @@ void main(){
 
     Card playersCards[MAX_PALYERS][CARDS_PER_PLAYER];
 
-    for(int i = 0; i < CARDS_PER_PLAYER; i++){
-        printf("[Card: %s = %d] ", playerDeck[i].name, playerDeck[i].value);
-    }
-
+    // for(int i = 0; i < CARDS_PER_PLAYER; i++){
+    //     printf("[Card: %s = %d] ", playerDeck[i].name, playerDeck[i].value);
+    // }
 
     // for(int i = 0; i < SUIT; i++){
     //     printf("\n");
@@ -61,17 +62,30 @@ void main(){
 }
 
 
+
 /**
 *   Creates card deck as 2D array. 4 suits(rows) each 13 cards(coloms).
 */
 void createNewDeck(Card newDeck[4][CARDS_IN_DECK]){
-    Card cards[CARDS_IN_DECK] = {
-        {"2", 2}, {"3", 3}, {"4", 4},
-        {"5", 5}, {"6", 6}, {"7", 7},
-        {"8", 8}, {"9", 9}, {"10", 10},
+    Card cards[4][CARDS_IN_DECK] = {
+        {
+            {"🂲", 2}, {"🂳", 3}, {"🂴", 4}, {"🂵", 5}, {"🂶", 6}, {"🂷", 7}, {"🂸", 8}, {"🂹", 9},
+            {"🂺", 10}, {"🂻", 11}, {"🂽", 12}, {"🂾", 13}, {"🂱", 14}
+        },
+        {
+            {"🃂", 2}, {"🃃", 3}, {"🃄", 4}, {"🃅", 5}, {"🃆", 6}, {"🃇", 7}, {"🃈", 8}, {"🃉", 9},
+            {"🃊", 10}, {"🃋", 11}, {"🃍", 12}, {"🃎", 13}, {"🃁", 14}
+        },
+        {
+            {"🃒", 2}, {"🃓", 3}, {"🃔", 4}, {"🃕", 5}, {"🃖", 6}, {"🃗", 7}, {"🃘", 8}, {"🃙", 9},
+            {"🃚", 10}, {"🃛", 11}, {"🃝", 12}, {"🃞", 13}, {"🃑", 14}
+        },
+        {
+            {"🂢", 2}, {"🂣", 3}, {"🂤", 4}, {"🂥", 5}, {"🂦", 6}, {"🂧", 7}, {"🂨", 8}, {"🂩", 9},
+            {"🂪", 10}, {"🂫", 11}, {"🂭", 12}, {"🂮", 13}, {"🂡", 14}
+        },
 
-        {"Jack", 11}, {"Queen", 12},
-        {"King", 13}, {"Ace", 14}
+
     };
 
     for(int i = 0; i < 4; i++){
@@ -90,9 +104,15 @@ void getCards(Card playerDeck[CARDS_PER_PLAYER]){
 
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
         int rNum = rand();
-        playerDeck[i] = newDeck[rNum % 4][rNum % CARDS_IN_DECK];
+        Card randomCard = newDeck[rNum % 4][rNum % CARDS_IN_DECK];
+
+        if( randomCard.value < 0 ){ continue; }
+
+        playerDeck[i] = randomCard;
+        newDeck[rNum % 4][rNum % CARDS_IN_DECK].value = -1;
+
         #if defined VERBOSE
-        printf("[Card: %s = %d] ", playerDeck[i].name, playerDeck[i].value);
+        printf("[ %s = %d ] ", playerDeck[i].name, playerDeck[i].value);
         #endif
     }
     printf("\n");
