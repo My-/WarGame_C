@@ -25,6 +25,7 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
 void showPlayerCards(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void enterSpace();
 void println();
+Card pickCard(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -40,6 +41,10 @@ void main(){
 
     int player = 1;
     showPlayerCards(player, allPlayersCards);
+
+    Card cardThrown = pickCard(player, allPlayersCards);
+
+    printf("%s %d", cardThrown.card, cardThrown.value);
 
 
     int zxc; scanf("%d", &zxc); // Pause terminal window
@@ -126,7 +131,7 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
 }
 
 /**
-*
+*   Shows given players cards.
 */
 void showPlayerCards(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     printf("Player %d, it's yur turn.\n", player);
@@ -161,4 +166,22 @@ void enterSpace(){
 
 void println(){
     printf("\n");
+}
+
+/**
+*   Gives card which player picks.
+*/
+Card pickCard(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
+    int uid;
+    Card pickedCard;
+    printf("Pick a card you would like to throw.\n");
+
+    do{
+        printf("\tEnter cards UID: ");
+        scanf("%d", &uid);
+    }while(uid < 0 || CARDS_PER_PLAYER < uid);
+
+    pickedCard = allPlayersCards[player][uid];
+    allPlayersCards[player][uid].value = -1; // mark as gone(used)
+    return pickedCard;
 }
