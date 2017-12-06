@@ -10,7 +10,7 @@
 #define CARDS_IN_DECK 13
 #define SUIT 4
 
-#define VERBOSE 1
+// #define VERBOSE 1
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/
 typedef struct Card{
@@ -22,6 +22,9 @@ typedef struct Card{
 void createNewDeck(Card newDeck[4][CARDS_IN_DECK]);
 void getRandomCards(Card palyerDeck[CARDS_PER_PLAYER]);
 void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void showPlayerCards(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void enterSpace();
+void println();
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -34,6 +37,9 @@ void main(){
     Card cardsOnDesk[MAX_PALYERS];
 
     dealCards(players, allPlayersCards);
+
+    int player = 1;
+    showPlayerCards(player, allPlayersCards);
 
 
     int zxc; scanf("%d", &zxc); // Pause terminal window
@@ -98,7 +104,9 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
 
         i++;
     }
+    #if defined VERBOSE
     printf("\n");
+    #endif
 
 }
 
@@ -115,4 +123,42 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
             allPlayersCards[i][j] = playerCards[j];
         }
     }
+}
+
+/**
+*
+*/
+void showPlayerCards(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
+    printf("Player %d, it's yur turn.\n", player);
+    printf("Hit Space to show cards.\n");
+    enterSpace();
+    printf("Player %d: ", player);
+    println();
+    printf("%12s","Your cards: ");
+    // print player cards
+    for(int i = 0; i < CARDS_PER_PLAYER; i++){
+        printf("%s %-2d ", allPlayersCards[player][i].card, allPlayersCards[player][i].value);
+    }
+    println();
+    printf("%12s","UID: ");
+    // print index of the card
+    for(int i = 0; i < CARDS_PER_PLAYER; i++){
+        printf("%2d   ", i);
+    }
+    println();
+}
+
+/**
+*   runs until user enters space
+*/
+void enterSpace(){
+    char ch;
+    do{
+        printf("\t(Space to continue)\n");
+        scanf("%c", &ch);
+    }while(ch != ' ');
+}
+
+void println(){
+    printf("\n");
 }
