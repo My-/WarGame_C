@@ -21,6 +21,7 @@ typedef struct Card{
 typedef struct Player{
     char name[20];
     int number;
+    int points;
 } Player;
 
 
@@ -32,7 +33,7 @@ void enterSpace();
 void println();
 Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
-int getWinner(int players, Card cardsOnDesk[MAX_PALYERS]);
+Player getWinner(int players, Card cardsOnDesk[MAX_PALYERS]);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -61,8 +62,7 @@ void main(){
     }
     println();
 
-    int winPos = getWinner(players, cardsOnDesk);
-    Player winner = playersList[winPos];
+    Player winner = getWinner(players, playersList, cardsOnDesk);
 
     printf("The winner is %s(%d)", winner.name, winner.number);
 
@@ -237,8 +237,16 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
 }
 
 /**
-*   Finde winner from given cards
+*   Find the winner from given cards
 */
-int getWinner(int players, Card cardsOnDesk[MAX_PALYERS]){
+Player getWinner(int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
+    int winPos = 0;
 
+    for(int i = 1; i < players; i++){
+        if( cardsOnDesk[winPos] < cardsOnDesk[i] ){
+            winPos = i;
+        }
+    }
+
+    return winPos;
 }
