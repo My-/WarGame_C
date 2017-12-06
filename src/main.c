@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-
+#include <string.h>
 
 
 #define CARDS_PER_PLAYER 13
@@ -18,14 +18,21 @@ typedef struct Card{
     int value;
 } Card;
 
+typedef struct Player{
+    char name[20];
+    int number;
+} Player;
+
 
 void createNewDeck(Card newDeck[4][CARDS_IN_DECK]);
 void getRandomCards(Card palyerDeck[CARDS_PER_PLAYER]);
 void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-void showPlayerCards(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void enterSpace();
 void println();
-Card pickCard(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
+int getWinner(int players, Card cardsOnDesk[MAX_PALYERS]);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -34,17 +41,30 @@ void main(){
     printf("Enter number of players : ");
     scanf("%d", &players);
 
+    Player playersList[MAX_PALYERS];
+    enterPlayersNames(players, playersList);
+
     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER];
     Card cardsOnDesk[MAX_PALYERS];
 
-    dealCards(players, allPlayersCards);
+    dealCards(players, allPlayersCards); // deals card to each player
+    // each player picks and puts card on the table
+    for(int i = 0; i < players; i++){
+        showPlayerCards(playersList[i], allPlayersCards);
+        Card cardThrown = pickCard(playersList[i], allPlayersCards);
+        cardsOnDesk[i] = cardThrown;
+    }
 
-    int player = 1;
-    showPlayerCards(player, allPlayersCards);
+    printf("Cards are: ");
+    for(int i = 0; i < players; i++){
+        printf("%s ", cardsOnDesk[i]);
+    }
+    println();
 
-    Card cardThrown = pickCard(player, allPlayersCards);
+    int winPos = getWinner(players, cardsOnDesk);
+    Player winner = playersList[winPos];
 
-    printf("%s %d", cardThrown.card, cardThrown.value);
+    printf("The winner is %s(%d)", winner.name, winner.number);
 
 
     int zxc; scanf("%d", &zxc); // Pause terminal window
@@ -128,21 +148,32 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
             allPlayersCards[i][j] = playerCards[j];
         }
     }
+
+    #if defined VERBOSE
+    for(int i = 0; i < players; i++){
+        printf("\n %d --> ", i);
+        for(int j = 0; j < CARDS_PER_PLAYER; j++){
+            printf("%s ", allPlayersCards[i][j].card);
+        }
+    }
+    println();
+    #endif
 }
 
 /**
 *   Shows given players cards.
 */
-void showPlayerCards(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
-    printf("Player %d, it's yur turn.\n", player);
+void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
+    printf("%s (%d), it's your turn.\n", player.name, player.number);
     printf("Hit Space to show cards.\n");
     enterSpace();
-    printf("Player %d: ", player);
+    printf("%s,", player.name);
     println();
     printf("%12s","Your cards: ");
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
-        printf("%s %-2d ", allPlayersCards[player][i].card, allPlayersCards[player][i].value);
+        printf("%s %-2d ", allPlayersCards[player.number][i].card,
+                            allPlayersCards[player.number][i].value);
     }
     println();
     printf("%12s","UID: ");
@@ -171,17 +202,43 @@ void println(){
 /**
 *   Gives card which player picks.
 */
-Card pickCard(int player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
+Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     int uid;
     Card pickedCard;
-    printf("Pick a card you would like to throw.\n");
+    printf("%s pick a card you would like to use.\n", player.name);
 
     do{
         printf("\tEnter cards UID: ");
         scanf("%d", &uid);
     }while(uid < 0 || CARDS_PER_PLAYER < uid);
 
-    pickedCard = allPlayersCards[player][uid];
-    allPlayersCards[player][uid].value = -1; // mark as gone(used)
+    pickedCard = allPlayersCards[player.number][uid];
+    allPlayersCards[player.number][uid].value = -1; // mark as gone(used)
     return pickedCard;
+}
+
+/**
+*   Enter names for each player.
+*/
+void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
+    for(int i = 0; i < players; i++){
+        char name[20];
+        printf("Player (%d) enter your name: ", i);
+        scanf("%s", name);
+        Player pl;
+        strcpy(pl.name, name);
+        pl.number = i;
+        playersList[i] = pl;
+
+        #if defined VERBOSE
+        printf("Hello %s!\n", playersList[i].name);
+        #endif
+    }
+}
+
+/**
+*   Finde winner from given cards
+*/
+int getWinner(int players, Card cardsOnDesk[MAX_PALYERS]){
+
 }
