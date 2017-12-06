@@ -33,7 +33,8 @@ void enterSpace();
 void println();
 Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
-Player getWinner(int players, Card cardsOnDesk[MAX_PALYERS]);
+Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]);
+int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -239,14 +240,32 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
 /**
 *   Find the winner from given cards
 */
-Player getWinner(int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
-    int winPos = 0;
+Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]){
+    int points;
+    points = removeDublicates(0, totalPlayers, cardsOnDesk);
 
-    for(int i = 1; i < players; i++){
+    for(int i = 1; i < toalPlayers; i++){
         if( cardsOnDesk[winPos] < cardsOnDesk[i] ){
             winPos = i;
         }
     }
 
     return winPos;
+}
+
+/**
+*   Removes dublicates. Recursive calls
+*/
+int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
+    if( startAt == totalPlayers -1 ){ return 0; }
+
+    int current = cardsOnDesk[startAt].value;
+    int next = cardsOnDesk[startAt +1].value;
+
+    if(current == next){
+
+    }
+
+
+    if(cur)
 }
