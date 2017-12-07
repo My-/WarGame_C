@@ -37,8 +37,11 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
 Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]);
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 void display(int limit, Card deck[100]);
+void displayPlayers(int limit, Player list[100]);
 void showLeaderBoard(int players, Player playersList[MAX_PALYERS]);
 void sort(int startAt, int players, Player playersList[MAX_PALYERS]);
+// void swapPlayers(int p1, int p2, Player list[MAX_PALYERS]);
+void swapPlayers(Player **p1, Player **p2);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -54,6 +57,7 @@ void main(){
     Card cardsOnDesk[MAX_PALYERS];
     // each loop is one round
     for(int round = 0; round < ROUNDS; round++){
+        printf("\n================================================================\n\n" );
         dealCards(players, allPlayersCards); // deals card to each player
 
         // each player picks and puts card on the table
@@ -243,6 +247,7 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
         Player pl;
         strcpy(pl.name, name);
         pl.number = i;
+        pl.points = 0;
         playersList[i] = pl;
 
         #if defined VERBOSE
@@ -316,8 +321,17 @@ void display(int limit, Card deck[100]){
 */
 void showLeaderBoard(int players, Player playersList[MAX_PALYERS]){
     Player list[players];
+    // copy
+    for(int i = 0; i < players; i++){
+        list[i] = playersList[i];
+    }
 
-    sort(0, players, list);
+    displayPlayers(players, list);
+
+    // sort(0, players, list);
+    swapPlayers( &list[0], &list[1]);
+
+    displayPlayers(players, list);
 }
 
 void sort(int startAt, int players, Player listToSort[MAX_PALYERS]){
@@ -327,27 +341,29 @@ void sort(int startAt, int players, Player listToSort[MAX_PALYERS]){
     int posMin = startAt;
 
     for(int i = startAt; i < end; i++){
-        if(listToSort[posMax].points < listToSort[i].points){ pos = i; }
-        if(listToSort[posMin].points > listToSort[i].points){ pos = i; }
+        if(listToSort[posMax].points < listToSort[i].points){ posMax = i; }
+        if(listToSort[posMin].points > listToSort[i].points){ posMin = i; }
     }
 
-    // swap Max
-    Player *pMax, *pEnd;
+    // swapPlayers(startAt, posMin, listToSort);
+    // swapPlayers(end, posMax, listToSort);
 
-    pMax = listToSort[posMax];
-    pEnd = listToSort[end -1];
+}
 
-    listToSort[posMax] = pEnd;
-    listToSort[end -1] = pMax;
+void swapPlayers(Player **p1, Player **p2){
+    Player *t = *p1;
+    *p1 = *p2;
+    *p2 = t;
+}
+// void swapPlayers(int pos1, int pos2, Player list[MAX_PALYERS]){
+//     Player *tmp = &list[pos1];
+//     list[pos1] = list[pos2];
+//     list[pos2] = pTmp;
+// }
 
-    // swap Min
-    Player *pMin, *pStart;
-
-    pMin = listToSort[posMin];
-    pStart = listToSort[startAt];
-
-    listToSort[posMin] = pStart;
-    listToSort[startAt] = pMin;
-
-
+void displayPlayers(int limit, Player list[100]){
+    for(int i = 0; i < limit; i++){
+        printf("%d points - %s(%d), ", list[i].points, list[i].name, list[i].number);
+    }
+    println();
 }
