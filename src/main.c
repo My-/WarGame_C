@@ -35,6 +35,7 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
 Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]);
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
+void display(int limit, Card deck[100]);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -59,14 +60,16 @@ void main(){
 
     printf("Cards are: ");
     for(int i = 0; i < players; i++){
-        printf("%s ", cardsOnDesk[i]);
+        printf("%s %d  ", cardsOnDesk[i].card, cardsOnDesk[i].value);
     }
     println();
 
     Player winner = getWinner(players, playersList, cardsOnDesk);
 
     printf("The winner is %s(%d)", winner.name, winner.number);
-
+    println();
+    printf("Has Points: %d", winner.points);
+    println();
 
     int zxc; scanf("%d", &zxc); // Pause terminal window
 }
@@ -241,31 +244,58 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
 *   Find the winner from given cards
 */
 Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]){
-    int points;
+    int points, winPos = 0;
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
 
-    for(int i = 1; i < toalPlayers; i++){
-        if( cardsOnDesk[winPos] < cardsOnDesk[i] ){
-            winPos = i;
-        }
+    // #if defined VERBOSE
+    display(totalPlayers, cardsOnDesk);
+    printf("Points: %d\n", points);
+    // #endif
+
+    for(int i = 0; i < totalPlayers; i++){
+        if( cardsOnDesk[i].value < 0 ){ continue; }
+        if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){ winPos = i; }
+        points += cardsOnDesk[i].value;
     }
 
-    return winPos;
+    playersList[winPos].points = points;
+
+    return playersList[winPos];
 }
 
 /**
 *   Removes dublicates. Recursive calls
 */
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
-    if( startAt == totalPlayers -1 ){ return 0; }
-
-    int current = cardsOnDesk[startAt].value;
-    int next = cardsOnDesk[startAt +1].value;
-
-    if(current == next){
-
+    if( startAt == totalPlayers ){ return 0; }
+    if( cardsOnDesk[startAt].value < 0){
+        return removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
     }
 
+    int current = cardsOnDesk[startAt].value;
+    int hasDubplicate = 0;
 
-    if(cur)
+    for(int i = startAt +1; i < totalPlayers; i++){
+        if( current == cardsOnDesk[i].value ){
+            cardsOnDesk[i].value = -1;
+            hasDubplicate++;
+        }
+    }
+
+    if( hasDubplicate ){
+        cardsOnDesk[startAt].value = -1;
+        hasDubplicate++;
+    }
+
+    return hasDubplicate *current +removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
+}
+
+/**
+*   displays cards from given deck up to given limit.
+*/
+void display(int limit, Card deck[100]){
+    for(int i = 0; i < limit; i++){
+        printf("%s %d  ", deck[i].card, deck[i].value);
+    }
+    println();
 }
