@@ -6,9 +6,10 @@
 
 
 #define CARDS_PER_PLAYER 13
-#define MAX_PALYERS 13
+#define MAX_PALYERS 10
 #define CARDS_IN_DECK 13
 #define SUIT 4
+#define ROUNDS 13
 
 // #define VERBOSE 1
 
@@ -36,6 +37,8 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
 Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]);
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 void display(int limit, Card deck[100]);
+void showLeaderBoard(int players, Player playersList[MAX_PALYERS]);
+void sort(int startAt, int players, Player playersList[MAX_PALYERS]);
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -49,27 +52,35 @@ void main(){
 
     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER];
     Card cardsOnDesk[MAX_PALYERS];
+    // each loop is one round
+    for(int round = 0; round < ROUNDS; round++){
+        dealCards(players, allPlayersCards); // deals card to each player
 
-    dealCards(players, allPlayersCards); // deals card to each player
-    // each player picks and puts card on the table
-    for(int i = 0; i < players; i++){
-        showPlayerCards(playersList[i], allPlayersCards);
-        Card cardThrown = pickCard(playersList[i], allPlayersCards);
-        cardsOnDesk[i] = cardThrown;
+        // each player picks and puts card on the table
+        for(int i = 0; i < players; i++){
+            showPlayerCards(playersList[i], allPlayersCards);
+            Card cardThrown = pickCard(playersList[i], allPlayersCards);
+            cardsOnDesk[i] = cardThrown;
+        }
+
+        printf("Cards on the table are: ");
+        for(int i = 0; i < players; i++){
+            printf("%s %d  ", cardsOnDesk[i].card, cardsOnDesk[i].value);
+        }
+        println();
+
+        Player winner = getWinner(players, playersList, cardsOnDesk);
+
+        printf("At round %d ", round +1);
+        printf("The winner is %s(%d)\n", winner.name, winner.number);
+        printf("%s has Points: %d\n", winner.name, winner.points);
+
+        showLeaderBoard(players, playersList);
+
     }
 
-    printf("Cards are: ");
-    for(int i = 0; i < players; i++){
-        printf("%s %d  ", cardsOnDesk[i].card, cardsOnDesk[i].value);
-    }
-    println();
 
-    Player winner = getWinner(players, playersList, cardsOnDesk);
 
-    printf("The winner is %s(%d)", winner.name, winner.number);
-    println();
-    printf("Has Points: %d", winner.points);
-    println();
 
     int zxc; scanf("%d", &zxc); // Pause terminal window
 }
@@ -298,4 +309,45 @@ void display(int limit, Card deck[100]){
         printf("%s %d  ", deck[i].card, deck[i].value);
     }
     println();
+}
+
+/**
+*   displays all players
+*/
+void showLeaderBoard(int players, Player playersList[MAX_PALYERS]){
+    Player list[players];
+
+    sort(0, players, list);
+}
+
+void sort(int startAt, int players, Player listToSort[MAX_PALYERS]){
+    if(startAt == players /2){ return; }
+    int end =  players -startAt;
+    int posMax = startAt;
+    int posMin = startAt;
+
+    for(int i = startAt; i < end; i++){
+        if(listToSort[posMax].points < listToSort[i].points){ pos = i; }
+        if(listToSort[posMin].points > listToSort[i].points){ pos = i; }
+    }
+
+    // swap Max
+    Player *pMax, *pEnd;
+
+    pMax = listToSort[posMax];
+    pEnd = listToSort[end -1];
+
+    listToSort[posMax] = pEnd;
+    listToSort[end -1] = pMax;
+
+    // swap Min
+    Player *pMin, *pStart;
+
+    pMin = listToSort[posMin];
+    pStart = listToSort[startAt];
+
+    listToSort[posMin] = pStart;
+    listToSort[startAt] = pMin;
+
+
 }
