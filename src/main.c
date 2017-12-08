@@ -290,7 +290,7 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
         points += cardsOnDesk[i].value;
     }
 
-    playersList[winPos].points = points;
+    playersList[winPos].points += points;
 
     return playersList[winPos];
 }
