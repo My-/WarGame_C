@@ -57,6 +57,7 @@ void main(){
     // each loop is one round
     for(int round = 0; round < ROUNDS; round++){
         printf("\n================================================================\n" );
+        printf("Round %d\n", round +1);
 
         // each player picks and puts card on the table
         for(int i = 0; i < players; i++){
@@ -65,19 +66,25 @@ void main(){
             cardsOnDesk[i] = cardThrown;
         }
 
-        printf("Cards on the table are: ");
+        clearScreen();
+        printf("Cards on the table are: \n");
         for(int i = 0; i < players; i++){
-            printf("%s %d  ", cardsOnDesk[i].card, cardsOnDesk[i].value);
+            printf("\t%s - ", playersList[i].name);
+            printf("%s (%d)\n", cardsOnDesk[i].card, cardsOnDesk[i].value);
         }
         println();
 
         Player winner = getWinner(players, playersList, cardsOnDesk);
 
-        printf("At round %d ", round +1);
+        printf("At Round %d ", round +1);
         printf("The winner is %s(%d)\n", winner.name, winner.number);
-        printf("%s has Points: %d\n", winner.name, winner.points);
-
+        printf("%s has %d points.\n", winner.name, winner.points);
+        println();
+        printf("Leaderboard:\n");
         displayPlayers(players, playersList);
+
+        printf("Continue <space>\n");
+        enterSpace();
 
     }
 
@@ -200,7 +207,7 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
 */
 void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     clearScreen();
-    printf("\n%s (%d), it's your turn. ", player.name, player.number);
+    printf("\n%s(%d), it's your turn. ", player.name, player.number);
     printf("Hit Space to show cards.\n");
     enterSpace();
     printf("%s,\n", player.name);
@@ -288,10 +295,10 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     int points, winPos = 0;
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
 
-    // #if defined VERBOSE
+    #if defined VERBOSE
     displayCards(totalPlayers, cardsOnDesk);
     printf("Points: %d\n", points);
-    // #endif
+    #endif
 
     for(int i = 0; i < totalPlayers; i++){
         if( cardsOnDesk[i].value < 0 ){ continue; }
@@ -343,7 +350,7 @@ void displayCards(int limit, Card deck[100]){
 
 void displayPlayers(int limit, Player list[100]){
     for(int i = 0; i < limit; i++){
-        printf("%d points - %s(%d), ", list[i].points, list[i].name, list[i].number);
+        printf("\t%d points - %s(%d)\n", list[i].points, list[i].name, list[i].number);
     }
     println();
 }
