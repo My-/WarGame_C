@@ -38,6 +38,7 @@ Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
+void clearScreen();
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -198,6 +199,7 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
 *   Shows given players cards.
 */
 void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
+    clearScreen();
     printf("\n%s (%d), it's your turn. ", player.name, player.number);
     printf("Hit Space to show cards.\n");
     enterSpace();
@@ -344,4 +346,8 @@ void displayPlayers(int limit, Player list[100]){
         printf("%d points - %s(%d), ", list[i].points, list[i].name, list[i].number);
     }
     println();
+}
+
+void clearScreen(){
+    for(int i = 0; i < 100; i++){ println(); }
 }
