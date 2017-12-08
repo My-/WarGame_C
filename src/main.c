@@ -36,7 +36,7 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
 Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]);
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
-void display(int limit, Card deck[100]);
+void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
 
 void main(){
@@ -280,7 +280,7 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
 
     // #if defined VERBOSE
-    display(totalPlayers, cardsOnDesk);
+    displayCards(totalPlayers, cardsOnDesk);
     printf("Points: %d\n", points);
     // #endif
 
@@ -325,7 +325,7 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 /**
 *   displays cards from given deck up to given limit.
 */
-void display(int limit, Card deck[100]){
+void displayCards(int limit, Card deck[100]){
     for(int i = 0; i < limit; i++){
         printf("%s %d  ", deck[i].card, deck[i].value);
     }
