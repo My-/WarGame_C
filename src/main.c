@@ -1,3 +1,12 @@
+/*
+    Writen By:
+        Mindaugas Sarskus
+    git:
+        https://github.com/My-/WarGame_C
+
+    TODO: https://github.com/DaveGamble/cJSON
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
