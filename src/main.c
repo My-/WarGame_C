@@ -48,10 +48,10 @@ void main(){
     scanf("%d", &players);
 
     Player playersList[MAX_PALYERS];
-    enterPlayersNames(players, playersList);
-
     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER];
     Card cardsOnDesk[MAX_PALYERS];
+
+    enterPlayersNames(players, playersList);
     dealCards(players, allPlayersCards); // deals card to each player
 
     // each loop is one round
@@ -68,6 +68,7 @@ void main(){
 
         clearScreen();
         printf("Cards on the table are: \n");
+        // print card and owner of the card
         for(int i = 0; i < players; i++){
             printf("\t%s - ", playersList[i].name);
             printf("%s (%d)\n", cardsOnDesk[i].card, cardsOnDesk[i].value);
@@ -292,27 +293,31 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
 *   Find the winner from given cards
 */
 Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]){
-    int points, winPos = 0;
+    int points, winPos = 0, hasWinner = 0;
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
 
     #if defined VERBOSE
     displayCards(totalPlayers, cardsOnDesk);
     printf("Points: %d\n", points);
     #endif
-
+    //
     for(int i = 0; i < totalPlayers; i++){
         if( cardsOnDesk[i].value < 0 ){ continue; }
-        if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){ winPos = i; }
+        if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){
+            winPos = i;
+            hasWinner = 1;
+        }
         points += cardsOnDesk[i].value;
     }
 
-    playersList[winPos].points += points;
+    playersList[winPos].points += hasWinner ? points : 0;  // all cards are the same(removed), no points.
 
     return playersList[winPos];
 }
 
 /**
 *   Removes dublicates. Recursive calls
+*   returns total points in dublicates
 */
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
     if( startAt == totalPlayers ){ return 0; }
