@@ -244,7 +244,8 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
     do{
         printf("\tEnter cards UID: ");
         scanf("%d", &uid);
-    }while(uid < 0 || CARDS_PER_PLAYER < uid);
+        // if pick not in range(0 to CARDS_PER_PLAYER) or cardnot exist. REPEAD
+    }while(uid < 0 || CARDS_PER_PLAYER < uid || allPlayersCards[player.number][uid].value < 0);
 
     pickedCard = allPlayersCards[player.number][uid];
     allPlayersCards[player.number][uid].value = -1; // mark as gone(used)
