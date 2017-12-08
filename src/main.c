@@ -55,7 +55,7 @@ void main(){
 
     // each loop is one round
     for(int round = 0; round < ROUNDS; round++){
-        printf("\n================================================================\n\n" );
+        printf("\n================================================================\n" );
 
         // each player picks and puts card on the table
         for(int i = 0; i < players; i++){
@@ -198,11 +198,10 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
 *   Shows given players cards.
 */
 void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
-    printf("%s (%d), it's your turn.\n", player.name, player.number);
+    printf("\n%s (%d), it's your turn. ", player.name, player.number);
     printf("Hit Space to show cards.\n");
     enterSpace();
-    printf("%s,", player.name);
-    println();
+    printf("%s,\n", player.name);
     printf("%12s","Your cards: ");
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
@@ -223,10 +222,18 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
 */
 void enterSpace(){
     char ch;
-    do{
+    fflush(stdin); // flush buffer
+
+    while ((ch = getchar()) != ' '){
         printf("\t(Space to continue)\n");
-        scanf("%c", &ch);
-    }while(ch != ' ');
+        fflush(stdin); // flush buffer
+    }
+
+    // do{
+    //     printf("\t(Space to continue)\n");
+    //     // scanf("%c", &ch);
+    //     ch = getchar();
+    // }while(ch != ' ');
 }
 
 void println(){
