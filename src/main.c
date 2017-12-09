@@ -57,8 +57,10 @@ void main(){
     srand( time(NULL) ); // random seed
 
     int players;
-    printf("Enter number of players : ");
-    scanf("%d", &players);
+    do{
+        printf("Enter number of players (2-%d): ", MAX_PALYERS);
+        scanf("%d", &players);
+    }while( players < 2 || MAX_PALYERS < players );
 
     Player playersList[MAX_PALYERS];
     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER];
