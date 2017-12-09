@@ -20,7 +20,11 @@
 #define SUIT 4
 #define ROUNDS 13
 
+#define SHOW 0
 // #define VERBOSE 1
+
+
+int pointsToNextRound = 0;
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/
 typedef struct Card{
@@ -87,8 +91,13 @@ void main(){
         Player winner = getWinner(players, playersList, cardsOnDesk);
 
         printf("At Round %d ", round +1);
-        printf("The winner is %s(%d)\n", winner.name, winner.number);
-        printf("%s has %d points.\n", winner.name, winner.points);
+        if( winner.number < 0 ){
+            printf("Here was no winner..\n");
+        }else{
+            printf("The winner is %s(%d)\n", winner.name, winner.number);
+            printf("%s has %d points.\n", winner.name, winner.points);
+        }
+
         println();
         printf("Leaderboard:\n");
         displayPlayers(players, playersList);
@@ -111,42 +120,42 @@ void main(){
 */
 void createNewDeck(Card newDeck[4][CARDS_IN_DECK]){
     // hard coded card deck
-    // Card cards[4][CARDS_IN_DECK] = {
-    //     {
-    //         {"🂲", 2}, {"🂳", 3}, {"🂴", 4}, {"🂵", 5}, {"🂶", 6}, {"🂷", 7}, {"🂸", 8}, {"🂹", 9},
-    //         {"🂺", 10}, {"🂻", 11}, {"🂽", 12}, {"🂾", 13}, {"🂱", 14}
-    //     },
-    //     {
-    //         {"🃂", 2}, {"🃃", 3}, {"🃄", 4}, {"🃅", 5}, {"🃆", 6}, {"🃇", 7}, {"🃈", 8}, {"🃉", 9},
-    //         {"🃊", 10}, {"🃋", 11}, {"🃍", 12}, {"🃎", 13}, {"🃁", 14}
-    //     },
-    //     {
-    //         {"🃒", 2}, {"🃓", 3}, {"🃔", 4}, {"🃕", 5}, {"🃖", 6}, {"🃗", 7}, {"🃘", 8}, {"🃙", 9},
-    //         {"🃚", 10}, {"🃛", 11}, {"🃝", 12}, {"🃞", 13}, {"🃑", 14}
-    //     },
-    //     {
-    //         {"🂢", 2}, {"🂣", 3}, {"🂤", 4}, {"🂥", 5}, {"🂦", 6}, {"🂧", 7}, {"🂨", 8}, {"🂩", 9},
-    //         {"🂪", 10}, {"🂫", 11}, {"🂭", 12}, {"🂮", 13}, {"🂡", 14}
-    //     }
-    // };
     Card cards[4][CARDS_IN_DECK] = {
         {
-            {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
-            {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+            {"🂲", 2}, {"🂳", 3}, {"🂴", 4}, {"🂵", 5}, {"🂶", 6}, {"🂷", 7}, {"🂸", 8}, {"🂹", 9},
+            {"🂺", 10}, {"🂻", 11}, {"🂽", 12}, {"🂾", 13}, {"🂱", 14}
         },
         {
-            {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
-            {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+            {"🃂", 2}, {"🃃", 3}, {"🃄", 4}, {"🃅", 5}, {"🃆", 6}, {"🃇", 7}, {"🃈", 8}, {"🃉", 9},
+            {"🃊", 10}, {"🃋", 11}, {"🃍", 12}, {"🃎", 13}, {"🃁", 14}
         },
         {
-            {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
-            {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+            {"🃒", 2}, {"🃓", 3}, {"🃔", 4}, {"🃕", 5}, {"🃖", 6}, {"🃗", 7}, {"🃘", 8}, {"🃙", 9},
+            {"🃚", 10}, {"🃛", 11}, {"🃝", 12}, {"🃞", 13}, {"🃑", 14}
         },
         {
-            {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
-            {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+            {"🂢", 2}, {"🂣", 3}, {"🂤", 4}, {"🂥", 5}, {"🂦", 6}, {"🂧", 7}, {"🂨", 8}, {"🂩", 9},
+            {"🂪", 10}, {"🂫", 11}, {"🂭", 12}, {"🂮", 13}, {"🂡", 14}
         }
     };
+    // Card cards[4][CARDS_IN_DECK] = {
+    //     {
+    //         {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
+    //         {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+    //     },
+    //     {
+    //         {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
+    //         {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+    //     },
+    //     {
+    //         {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
+    //         {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+    //     },
+    //     {
+    //         {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
+    //         {"10", 10}, {"J", 11}, {"Q", 12}, {"K", 13}, {"A", 14}
+    //     }
+    // };
 
     // copy hard coded array to given array
     for(int i = 0; i < 4; i++){
@@ -224,8 +233,7 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
     printf("%12s","Your cards: ");
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
-        printf("%s %-2d ", allPlayersCards[player.number][i].card,
-                            allPlayersCards[player.number][i].value);
+        printf("%s    ", allPlayersCards[player.number][i].card);
     }
     println();
     printf("%12s","UID: ");
@@ -319,7 +327,14 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
         points += cardsOnDesk[i].value;
     }
 
-    playersList[winPos].points += hasWinner ? points : 0;  // all cards are the same(removed), no points.
+    if( hasWinner ){
+        playersList[winPos].points += points + pointsToNextRound;
+        pointsToNextRound = 0;
+    }else{
+        pointsToNextRound = points;
+        Player p = {"no", -1, -1};
+        return p;
+    }
 
     return playersList[winPos];
 }
@@ -357,7 +372,8 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 */
 void displayCards(int limit, Card deck[100]){
     for(int i = 0; i < limit; i++){
-        printf("%s %d  ", deck[i].card, deck[i].value);
+        // printf("%s %d  ", deck[i].card, deck[i].value);
+        printf("%s  ", deck[i].card);
     }
     println();
 }
