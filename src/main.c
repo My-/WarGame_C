@@ -235,7 +235,11 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
     printf("%12s","Your cards: ");
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
-        printf("%s    ", allPlayersCards[player.number][i].card);
+        if( allPlayersCards[player.number][i].value < 0 ){
+            printf("%s    ", "_");
+        }else{
+            printf("%s    ", allPlayersCards[player.number][i].card );
+        }
     }
     println();
     printf("%12s","UID: ");
