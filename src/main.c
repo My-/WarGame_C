@@ -21,7 +21,7 @@
 #define ROUNDS 13
 
 #define SHOW 0
-// #define VERBOSE 1
+#define VERBOSE 1
 
 
 int pointsToNextRound = 0;
@@ -93,6 +93,9 @@ void main(){
         Player winner = getWinner(players, playersList, cardsOnDesk);
 
         printf("At Round %d ", round +1);
+        #if defined VERBOSE
+        printf("\n-----Winner:{%s}\n", winner.name);
+        #endif
         if( winner.number < 0 ){
             printf("Here was no winner..\n");
         }else{
@@ -105,10 +108,10 @@ void main(){
         displayPlayers(players, playersList);
 
         printf("Continue <space>\n");
+        fflush(stdin); // flush buffer
         enterSpace();
 
     }
-
 
 
 
@@ -204,6 +207,9 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
     #endif
 
     if(suitLeft > 0){
+        #if defined VERBOSE
+        printf("Missing %d suits!\n", suitLeft);
+        #endif
         for(int j = 0; j < 4; j++){
             if(suits[j] == 'x'){
                 int rNum = rand();
@@ -301,7 +307,7 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
     do{
         printf("\tEnter cards UID: ");
         scanf("%d", &uid);
-        // if pick not in range(0 to CARDS_PER_PLAYER) or cardnot exist. REPEAD
+        // if pick not in range(0 to CARDS_PER_PLAYER) or card not exist. REPEAD
     }while(uid < 0 || CARDS_PER_PLAYER < uid || allPlayersCards[player.number][uid].value < 0);
 
     pickedCard = allPlayersCards[player.number][uid];
@@ -338,7 +344,7 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
 
     #if defined VERBOSE
     displayCards(totalPlayers, cardsOnDesk);
-    printf("Points: %d\n", points);
+    printf("Points(from duplicates): %d\n", points);
     #endif
     //
     for(int i = 0; i < totalPlayers; i++){
@@ -395,8 +401,13 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 */
 void displayCards(int limit, Card deck[100]){
     for(int i = 0; i < limit; i++){
-        // printf("%s %d  ", deck[i].card, deck[i].value);
+        #if defined VERBOSE
+        printf("%s %d  ", deck[i].card, deck[i].value);
+        #endif
+
+        #ifndef VERBOSE
         printf("%s  ", deck[i].card);
+        #endif
     }
     println();
 }
