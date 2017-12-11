@@ -174,14 +174,21 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
     // take new deck of cards
     Card newDeck[4][CARDS_IN_DECK];
     createNewDeck(newDeck);
+    char suits[4] = {'x', 'x', 'x', 'x'}; // harts, diamonds, club, spades
+    int suitLeft = 4;
 
     int i = 0;
     // pic randomly cards and give it to player.
-    while(i < CARDS_PER_PLAYER){
+    while(i < CARDS_PER_PLAYER -suitLeft){
         int rNum = rand();
         Card randomCard = newDeck[rNum % 4][rNum % CARDS_IN_DECK];
 
         if( randomCard.value < 0 ){ continue; } // card is already given
+        // mark unique suits
+        if( suits[rNum % 4] == 'x'){
+            suits[rNum % 4] = 'v';
+            suitLeft--;
+        }
 
         playerDeck[i] = randomCard; // give card to player
         newDeck[rNum % 4][rNum % CARDS_IN_DECK].value = -1; // mark card in deck as given
@@ -196,6 +203,16 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
     printf("\n");
     #endif
 
+    if(suitLeft > 0){
+        for(int j = 0; j < 4; j++){
+            if(suits[j] == 'x'){
+                int rNum = rand();
+                playerDeck[i] = newDeck[j][rNum % CARDS_IN_DECK]; // give card to player
+                newDeck[j][rNum % CARDS_IN_DECK].value = -1; // mark card in deck as given
+                i++;
+            }
+        }
+    }
 }
 
 /**
