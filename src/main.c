@@ -13,6 +13,8 @@
 #include <time.h>
 #include <string.h>
 
+#include "myUtils.h"
+
 
 #define CARDS_PER_PLAYER 13
 #define MAX_PALYERS 10
@@ -51,7 +53,7 @@ Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
-void clearScreen();
+// void clearScreen();
 void exitDialogue();
 int yesNo();
 char * getWord();
@@ -433,9 +435,9 @@ void displayPlayers(int limit, Player list[100]){
     println();
 }
 
-void clearScreen(){
-    for(int i = 0; i < 100; i++){ println(); }
-}
+// void clearScreen(){
+//     for(int i = 0; i < 100; i++){ println(); }
+// }
 
 void exitDialogue(){
     printf("Do you want to save before exit?\n");
