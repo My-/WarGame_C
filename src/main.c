@@ -52,6 +52,9 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
 void clearScreen();
+void exitDialogue();
+int yesNo();
+char * getWord();
 
 void main(){
     srand( time(NULL) ); // random seed
@@ -108,7 +111,18 @@ void main(){
         displayPlayers(players, playersList);
 
         printf("Continue <space>\n");
-        fflush(stdin); // flush buffer
+        printf("Exit <x>\n");
+
+        char input;
+        scanf("%c", &input);
+
+        switch(input){
+            case 'x':
+            case 'X':
+                exitDialogue();
+                break;
+        }
+        // autoSave();
         enterSpace();
 
     }
@@ -421,4 +435,41 @@ void displayPlayers(int limit, Player list[100]){
 
 void clearScreen(){
     for(int i = 0; i < 100; i++){ println(); }
+}
+
+void exitDialogue(){
+    printf("Do you want to save before exit?\n");
+    int isSave= yesNo();
+
+    if(isSave){
+        printf("Enter save name:");
+        char *pName = getWord();
+        // saveGame();
+    }
+}
+
+int yesNo(){
+    char ch;
+
+    while(1){
+        printf("(Yes/No)\n");
+        ch = getchar();
+
+        switch (ch) {
+            case 'y':
+            case 'Y':
+                return 1;
+            case 'n':
+            case 'N':
+                return 0;
+        }
+
+    }
+}
+
+char * getWord(){
+    char word[15];
+    scanf("%s", word);
+
+    return word;
 }
