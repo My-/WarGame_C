@@ -72,7 +72,6 @@ void main(){
         char autoSave[15] = "autoSave";
         saveGame(autoSave, round, totalPlayers, playersList, allPlayersCards);
 
-
         printf("Continue < Enter >\n");
         printf("Exit < x + Enter >\n");
 
@@ -93,12 +92,8 @@ void main(){
             }
         }while(invalid);
 
-        printf("Input is: %c\n", input);
-
-        if( input == 'x'){ exitGame(); }
-
-
-        // autoSave();
+        if( input == 'x'){
+            exitGame(round, totalPlayers, playersList, allPlayersCards); }
 
     }// for round loop
 

@@ -324,13 +324,6 @@ int yesNo(){
 
 }
 
-char * getWord(){
-    char word[15];
-    scanf("%s", word);
-
-    return word;
-}
-
 void saveGame(char fileName[15], int round, int totalPlayers, Player playersList[MAX_PALYERS],
                                     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     FILE* pFile;
@@ -359,27 +352,14 @@ void saveGame(char fileName[15], int round, int totalPlayers, Player playersList
     }
 }
 
-// int saveGame(char *fileName){
-//     FILE* pFile;
-//
-//     strcat(fileName, ".save");
-//     pFile = fopen(fileName, "w");
-//
-//     if (pFile == NULL){
-// 		printf("The file could not be opened\n"); }
-//     else{
-// 		fprintf(pFile,"%d\n", 1);
-// 		fprintf(pFile,"%d\n", 2);
-// 		fclose(pFile);
-//     }
-// }
-
-void exitGame(){
+void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
+                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     printf("Do Yo want to save a current game progress?\n");
     int answ = yesNo();
     if( !answ ){ exit(0); }
 
-    printf("Enter save name:");
-    char *fileName = getWord();
-    // int isSaved = saveGame(fileName);
+    printf("Enter game save name: ");
+    char fileName[15];
+    scanf("%s", fileName);
+    saveGame(fileName, round, totalPlayers, playersList, allPlayersCards);
 }

@@ -47,9 +47,10 @@ void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
 // void clearScreen();
 int yesNo();
-char * getWord();
-void exitGame();
-void saveGame(char fileName[15], int round, int totalPlayers, Player playersList[MAX_PALYERS],
-                                    Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
+                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void saveGame(char fileName[15], int round, int totalPlayers,
+                            Player playersList[MAX_PALYERS],
+                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 
 #endif
