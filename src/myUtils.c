@@ -17,3 +17,7 @@ void enterSpace(){
         fflush(stdin); // flush buffer
     }
 }
+
+void println(){
+    printf("\n");
+}
