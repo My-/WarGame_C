@@ -7,7 +7,7 @@
     TODO: https://github.com/DaveGamble/cJSON
 */
 
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -25,6 +25,8 @@
 #define SHOW 0
 #define VERBOSE 1
 
+#define MASTER_FILE "masterFile.txt"
+
 
 int pointsToNextRound = 0;
 
@@ -36,7 +38,7 @@ typedef struct Card{
 
 typedef struct Player{
     char name[20];
-    int number;
+    int id;
     int points;
 } Player;
 
@@ -45,7 +47,7 @@ void createNewDeck(Card newDeck[4][CARDS_IN_DECK]);
 void getRandomCards(Card palyerDeck[CARDS_PER_PLAYER]);
 void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-void enterSpace();
+// void enterSpace();
 void println();
 Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
@@ -54,25 +56,25 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
 // void clearScreen();
-void exitDialogue();
 int yesNo();
 char * getWord();
+void exitGame();
 
 void main(){
     srand( time(NULL) ); // random seed
 
-    int players;
+    int totalPlayers;
     do{
         printf("Enter number of players (2-%d): ", MAX_PALYERS);
-        scanf("%d", &players);
-    }while( players < 2 || MAX_PALYERS < players );
+        scanf("%d", &totalPlayers);
+    }while( totalPlayers < 2 || MAX_PALYERS < totalPlayers );
 
     Player playersList[MAX_PALYERS];
     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER];
     Card cardsOnDesk[MAX_PALYERS];
 
-    enterPlayersNames(players, playersList);
-    dealCards(players, allPlayersCards); // deals card to each player
+    enterPlayersNames(totalPlayers, playersList);
+    dealCards(totalPlayers, allPlayersCards); // deals card to each player
 
     // each loop is one round
     for(int round = 0; round < ROUNDS; round++){
@@ -80,7 +82,7 @@ void main(){
         printf("Round %d\n", round +1);
 
         // each player picks and puts card on the table
-        for(int i = 0; i < players; i++){
+        for(int i = 0; i < totalPlayers; i++){
             showPlayerCards(playersList[i], allPlayersCards);
             Card cardThrown = pickCard(playersList[i], allPlayersCards);
             cardsOnDesk[i] = cardThrown;
@@ -89,45 +91,81 @@ void main(){
         clearScreen();
         printf("Cards on the table are: \n");
         // print card and owner of the card
-        for(int i = 0; i < players; i++){
+        for(int i = 0; i < totalPlayers; i++){
             printf("\t%s - ", playersList[i].name);
             printf("%s (%d)\n", cardsOnDesk[i].card, cardsOnDesk[i].value);
         }
         println();
 
-        Player winner = getWinner(players, playersList, cardsOnDesk);
+        Player winner = getWinner(totalPlayers, playersList, cardsOnDesk);
 
         printf("At Round %d ", round +1);
-        #if defined VERBOSE
-        printf("\n-----Winner:{%s}\n", winner.name);
-        #endif
-        if( winner.number < 0 ){
+        if( winner.id < 0 ){
             printf("Here was no winner..\n");
         }else{
-            printf("The winner is %s(%d)\n", winner.name, winner.number);
+            printf("The winner is %s(%d)\n", winner.name, winner.id);
             printf("%s has %d points.\n", winner.name, winner.points);
+            playersList[winner.id].points = winner.points;
         }
 
         println();
         printf("Leaderboard:\n");
-        displayPlayers(players, playersList);
+        displayPlayers(totalPlayers, playersList);
 
-        printf("Continue <space>\n");
-        printf("Exit <x>\n");
+        // auto save
+        FILE* pFile;
+        pFile = fopen("autoSave.save", "w");
+
+        if (pFile == NULL){
+    		printf("The file could not be opened\n"); }
+        else{
+    		fprintf(pFile,"%d\n", round); // round
+    		fprintf(pFile,"%d\n", totalPlayers); // total players
+
+            // Player.id, Player.name, Player. points, Card.vale, Card.value, Ca..
+            for( int player = 0; player < totalPlayers; player++){
+                fprintf(pFile,"%d\t%s\t%d", playersList[player].id,
+                                            playersList[player].name,
+                                            playersList[player].points);
+
+                for( int card = 0; card < CARDS_PER_PLAYER; card++){
+                    fprintf(pFile,"\t%d", allPlayersCards[player][card].value);
+                }
+                fprintf(pFile,"\n");
+            }
+    		fclose(pFile);
+        }
+
+
+
+        printf("Continue < Enter >\n");
+        printf("Exit < x + Enter >\n");
 
         char input;
-        scanf("%c", &input);
+        int invalid = 1;
+        do{
+            input = getchar();
+            switch(input){ // uses swich fall trough
+                case 'C':
+                case 'c':
+                case 'X':
+                case 'x':
+                    input = tolower(input);
+                    invalid = 0;
+                    break;
+                default:
+                    printf("Enter <eXit (x)> or <Continue (c)> \n");
+            }
+        }while(invalid);
 
-        switch(input){
-            case 'x':
-            case 'X':
-                exitDialogue();
-                break;
-        }
+        printf("Input is: %c\n", input);
+
+        if( input == 'x'){ exitGame(); }
+
+
         // autoSave();
-        enterSpace();
 
-    }
+    }// for round loop
 
 
 
@@ -267,17 +305,17 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
 */
 void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     clearScreen();
-    printf("\n%s(%d), it's your turn. ", player.name, player.number);
+    printf("\n%s(%d), it's your turn. ", player.name, player.id);
     printf("Hit Space to show cards.\n");
     enterSpace();
     printf("%s,\n", player.name);
     printf("%12s","Your cards: ");
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
-        if( allPlayersCards[player.number][i].value < 0 ){
+        if( allPlayersCards[player.id][i].value < 0 ){
             printf("%s    ", "_");
         }else{
-            printf("%s    ", allPlayersCards[player.number][i].card );
+            printf("%s    ", allPlayersCards[player.id][i].card );
         }
     }
     println();
@@ -289,24 +327,24 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
     println();
 }
 
-/**
-*   runs until user enters space
-*/
-void enterSpace(){
-    char ch;
-    fflush(stdin); // flush buffer
-
-    while ((ch = getchar()) != ' '){
-        printf("\t(Space to continue)\n");
-        fflush(stdin); // flush buffer
-    }
-
-    // do{
-    //     printf("\t(Space to continue)\n");
-    //     // scanf("%c", &ch);
-    //     ch = getchar();
-    // }while(ch != ' ');
-}
+// /**
+// *   runs until user enters space
+// */
+// void enterSpace(){
+//     char ch;
+//     fflush(stdin); // flush buffer
+//
+//     while ((ch = getchar()) != ' '){
+//         printf("\t(Space to continue)\n");
+//         fflush(stdin); // flush buffer
+//     }
+//
+//     // do{
+//     //     printf("\t(Space to continue)\n");
+//     //     // scanf("%c", &ch);
+//     //     ch = getchar();
+//     // }while(ch != ' ');
+// }
 
 void println(){
     printf("\n");
@@ -324,10 +362,10 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
         printf("\tEnter cards UID: ");
         scanf("%d", &uid);
         // if pick not in range(0 to CARDS_PER_PLAYER) or card not exist. REPEAD
-    }while(uid < 0 || CARDS_PER_PLAYER < uid || allPlayersCards[player.number][uid].value < 0);
+    }while(uid < 0 || CARDS_PER_PLAYER < uid || allPlayersCards[player.id][uid].value < 0);
 
-    pickedCard = allPlayersCards[player.number][uid];
-    allPlayersCards[player.number][uid].value = -1; // mark as gone(used)
+    pickedCard = allPlayersCards[player.id][uid];
+    allPlayersCards[player.id][uid].value = -1; // mark as gone(used)
     return pickedCard;
 }
 
@@ -341,7 +379,7 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
         scanf("%s", name);
         Player pl;
         strcpy(pl.name, name);
-        pl.number = i;
+        pl.id = i;
         pl.points = 0;
         playersList[i] = pl;
 
@@ -430,7 +468,7 @@ void displayCards(int limit, Card deck[100]){
 
 void displayPlayers(int limit, Player list[100]){
     for(int i = 0; i < limit; i++){
-        printf("\t%d points - %s(%d)\n", list[i].points, list[i].name, list[i].number);
+        printf("\t%d points - %s(%d)\n", list[i].points, list[i].name, list[i].id);
     }
     println();
 }
@@ -439,16 +477,7 @@ void displayPlayers(int limit, Player list[100]){
 //     for(int i = 0; i < 100; i++){ println(); }
 // }
 
-void exitDialogue(){
-    printf("Do you want to save before exit?\n");
-    int isSave= yesNo();
 
-    if(isSave){
-        printf("Enter save name:");
-        char *pName = getWord();
-        // saveGame();
-    }
-}
 
 int yesNo(){
     char ch;
@@ -465,8 +494,8 @@ int yesNo(){
             case 'N':
                 return 0;
         }
-
     }
+
 }
 
 char * getWord(){
@@ -474,4 +503,29 @@ char * getWord(){
     scanf("%s", word);
 
     return word;
+}
+
+int saveGame(char *fileName){
+    FILE* pFile;
+
+    strcat(fileName, ".save");
+    pFile = fopen(fileName, "w");
+
+    if (pFile == NULL){
+		printf("The file could not be opened\n"); }
+    else{
+		fprintf(pFile,"%d\n", 1);
+		fprintf(pFile,"%d\n", 2);
+		fclose(pFile);
+    }
+}
+
+void exitGame(){
+    printf("Do Yo want to save a current game progress?\n");
+    int answ = yesNo();
+    if( !answ ){ exit(0); }
+
+    printf("Enter save name:");
+    char *fileName = getWord();
+    int isSaved = saveGame(fileName);
 }
