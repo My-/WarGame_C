@@ -18,7 +18,7 @@
 #define SHOW 0
 #define VERBOSE 1
 
-#define MASTER_FILE "masterFile.txt"
+
 
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/

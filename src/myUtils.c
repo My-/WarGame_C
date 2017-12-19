@@ -21,3 +21,16 @@ void enterSpace(){
 void println(){
     printf("\n");
 }
+
+void addLog(char fileName[15]){
+    FILE* pFile;
+    pFile = fopen(MASTER_FILE, "a");
+    // pFile = fopen("autoSave.save", "w");
+
+    if (pFile == NULL){
+        printf("The file could not be opened\n"); }
+    else{
+        fprintf(pFile,"%s\n", fileName);
+        fclose(pFile);
+    }
+}

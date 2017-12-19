@@ -362,4 +362,6 @@ void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
     char fileName[15];
     scanf("%s", fileName);
     saveGame(fileName, round, totalPlayers, playersList, allPlayersCards);
+    addLog(fileName);
+    exit(0);
 }
