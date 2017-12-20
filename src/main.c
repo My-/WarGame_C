@@ -19,21 +19,28 @@
 void main(){
     srand( time(NULL) ); // random seed
 
+    int round = 0;
     int totalPlayers;
-    do{
-        printf("Enter number of players (2-%d): ", MAX_PALYERS);
-        scanf("%d", &totalPlayers);
-    }while( totalPlayers < 2 || MAX_PALYERS < totalPlayers );
-
+    int isLoaded = 0;
     Player playersList[MAX_PALYERS];
     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER];
     Card cardsOnDesk[MAX_PALYERS];
 
-    enterPlayersNames(totalPlayers, playersList);
-    dealCards(totalPlayers, allPlayersCards); // deals card to each player
+    isLoaded = loadGame(&round, &totalPlayers, playersList, allPlayersCards);
+    if( isLoaded ){ printf("Game Loaded!"); }
+    else{
+        
+        do{
+            printf("Enter number of players (2-%d): ", MAX_PALYERS);
+            scanf("%d", &totalPlayers);
+        }while( totalPlayers < 2 || MAX_PALYERS < totalPlayers );
+
+        enterPlayersNames(totalPlayers, playersList);
+        dealCards(totalPlayers, allPlayersCards); // deals card to each player
+    }
 
     // each loop is one round
-    for(int round = 0; round < ROUNDS; round++){
+    for(  ; round < ROUNDS; round++){ // Why not while loop? I like increase variable here
         printf("\n================================================================\n" );
         printf("Round %d\n", round +1);
 

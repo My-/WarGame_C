@@ -15,6 +15,11 @@
 #define SUIT 4
 #define ROUNDS 13
 
+#define MAX_SAVES 10
+#define MAX_FILE_NAME_LENGHT 15
+#define AUTO_SAVE "autoSave"
+#define SAVE_LOG "save.log"
+
 #define SHOW 0
 #define VERBOSE 1
 
@@ -52,5 +57,7 @@ void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
 void saveGame(char fileName[15], int round, int totalPlayers,
                             Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-
+int loadGame(int *round, int *totalPlayers, Player playersList[MAX_PALYERS],
+                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+void nameCards(Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 #endif
