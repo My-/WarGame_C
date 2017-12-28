@@ -28,7 +28,7 @@
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/
 typedef struct Card{
-    char card[5];
+    char name[5];
     int value;
 } Card;
 
@@ -50,7 +50,6 @@ Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
-// void clearScreen();
 int yesNo();
 void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);

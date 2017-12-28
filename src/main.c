@@ -29,7 +29,7 @@ void main(){
     isLoaded = loadGame(&round, &totalPlayers, playersList, allPlayersCards);
     if( isLoaded ){ printf("Game Loaded!"); }
     else{
-        
+
         do{
             printf("Enter number of players (2-%d): ", MAX_PALYERS);
             scanf("%d", &totalPlayers);
@@ -56,7 +56,7 @@ void main(){
         // print card and owner of the card
         for(int i = 0; i < totalPlayers; i++){
             printf("\t%s - ", playersList[i].name);
-            printf("%s (%d)\n", cardsOnDesk[i].card, cardsOnDesk[i].value);
+            printf("%s (%d)\n", cardsOnDesk[i].name, cardsOnDesk[i].value);
         }
         println();
 

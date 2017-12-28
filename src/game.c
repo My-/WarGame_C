@@ -79,7 +79,7 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
         newDeck[rNum % 4][rNum % CARDS_IN_DECK].value = -1; // mark card in deck as given
 
         #if defined VERBOSE
-        printf("[ %s = %d ] ", playerDeck[i].card, playerDeck[i].value);
+        printf("[ %s = %d ] ", playerDeck[i].name, playerDeck[i].value);
         #endif
 
         i++;
@@ -121,7 +121,7 @@ void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER])
     for(int i = 0; i < players; i++){
         printf("\n %d --> ", i);
         for(int j = 0; j < CARDS_PER_PLAYER; j++){
-            printf("%s ", allPlayersCards[i][j].card);
+            printf("%s ", allPlayersCards[i][j].name);
         }
     }
     println();
@@ -143,7 +143,7 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
         if( allPlayersCards[player.id][i].value < 0 ){
             printf("%s    ", "_");
         }else{
-            printf("%s    ", allPlayersCards[player.id][i].card );
+            printf("%s    ", allPlayersCards[player.id][i].name );
         }
     }
     println();
@@ -282,11 +282,11 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 void displayCards(int limit, Card deck[100]){
     for(int i = 0; i < limit; i++){
         #if defined VERBOSE
-        printf("%s %d  ", deck[i].card, deck[i].value);
+        printf("%s %d  ", deck[i].name, deck[i].value);
         #endif
 
         #ifndef VERBOSE
-        printf("%s  ", deck[i].card);
+        printf("%s  ", deck[i].name);
         #endif
     }
     println();
@@ -298,12 +298,6 @@ void displayPlayers(int limit, Player list[100]){
     }
     println();
 }
-
-// void clearScreen(){
-//     for(int i = 0; i < 100; i++){ println(); }
-// }
-
-
 
 int yesNo(){
     char ch;
@@ -447,7 +441,7 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
 // void nameCards(Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
 //     for(int player = 0; player < MAX_PALYERS; player++){
 //         for(int card = 0; card < CARDS_PER_PLAYER; card++){
-//             allPlayersCards[player][card].card = "#";
+//             allPlayersCards[player][card].name = "#";
 //         }
 //     }
 // }
