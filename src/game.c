@@ -69,7 +69,7 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
         int rNum = rand();
         Card randomCard = newDeck[rNum % 4][rNum % CARDS_IN_DECK];
 
-        if( randomCard.value < 0 ){ continue; } // card is already given
+        if( randomCard.value == USED_CARD ){ continue; } // card is already given
         // mark unique suits
         if( suits[rNum % 4] == 'x'){
             suits[rNum % 4] = 'v';
@@ -77,7 +77,7 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
         }
 
         playerDeck[i] = randomCard; // give card to player
-        newDeck[rNum % 4][rNum % CARDS_IN_DECK].value = -1; // mark card in deck as given
+        newDeck[rNum % 4][rNum % CARDS_IN_DECK].value = USED_CARD; // mark card in deck as given
 
         #if defined VERBOSE
         printf("[ %s = %d ] ", playerDeck[i].name, playerDeck[i].value);
@@ -97,7 +97,7 @@ void getRandomCards(Card playerDeck[CARDS_PER_PLAYER]){
             if(suits[j] == 'x'){
                 int rNum = rand();
                 playerDeck[i] = newDeck[j][rNum % CARDS_IN_DECK]; // give card to player
-                newDeck[j][rNum % CARDS_IN_DECK].value = -1; // mark card in deck as given
+                newDeck[j][rNum % CARDS_IN_DECK].value = USED_CARD; // mark card in deck as given
                 i++;
             }
         }
@@ -140,7 +140,7 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
     printf("%12s","Your cards: ");
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
-        if( allPlayersCards[player.id][i].value < 0 ){
+        if( allPlayersCards[player.id][i].value == USED_CARD ){
             printf("%s    ", "_");
         }else{
             printf("%s    ", allPlayersCards[player.id][i].name );
@@ -167,10 +167,10 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
         printf("\tEnter cards UID: ");
         scanf("%d", &uid);
         // if pick not in range(0 to CARDS_PER_PLAYER) or card not exist. REPEAD
-    }while(uid < 0 || CARDS_PER_PLAYER < uid || allPlayersCards[player.id][uid].value < 0);
+    }while(uid < 0 || CARDS_PER_PLAYER < uid || allPlayersCards[player.id][uid].value == USED_CARD);
 
     pickedCard = allPlayersCards[player.id][uid];
-    allPlayersCards[player.id][uid].value = -1; // mark as gone(used)
+    allPlayersCards[player.id][uid].value = USED_CARD; // mark as gone(used)
     return pickedCard;
 }
 
@@ -207,7 +207,7 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     #endif
     //
     for(int i = 0; i < totalPlayers; i++){
-        if( cardsOnDesk[i].value < 0 ){ continue; }
+        if( cardsOnDesk[i].value == USED_CARD ){ continue; }
         if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){
             winPos = i;
             hasWinner = 1;
@@ -233,7 +233,7 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
 */
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
     if( startAt == totalPlayers ){ return 0; }
-    if( cardsOnDesk[startAt].value < 0){
+    if( cardsOnDesk[startAt].value == USED_CARD ){
         return removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
     }
 
@@ -242,13 +242,13 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
 
     for(int i = startAt +1; i < totalPlayers; i++){
         if( current == cardsOnDesk[i].value ){
-            cardsOnDesk[i].value = -1;
+            cardsOnDesk[i].value = USED_CARD;
             hasDubplicate++;
         }
     }
 
     if( hasDubplicate ){
-        cardsOnDesk[startAt].value = -1;
+        cardsOnDesk[startAt].value = USED_CARD;
         hasDubplicate++;
     }
 
@@ -429,6 +429,7 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
                 case 12: strcpy(allPlayersCards[player][card].name, "Q"); break;
                 case 13: strcpy(allPlayersCards[player][card].name, "K"); break;
                 case 14: strcpy(allPlayersCards[player][card].name, "A"); break;
+                default: strcpy(allPlayersCards[player][card].name, "_"); break;
             }
         }
     }
