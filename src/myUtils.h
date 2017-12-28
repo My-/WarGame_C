@@ -5,7 +5,8 @@
 #define MASTER_FILE "save.log"
 
 #include <stdio.h>
-// the entire header file file
+
+
 void clearScreen();
 void enterSpace();
 void println();

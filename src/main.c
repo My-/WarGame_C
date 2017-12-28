@@ -27,7 +27,7 @@ void main(){
     Card cardsOnDesk[MAX_PALYERS];
 
     isLoaded = loadGame(&round, &totalPlayers, playersList, allPlayersCards);
-    if( isLoaded ){ printf("Game Loaded!"); }
+    if( isLoaded ){ printf("Game Loaded!\n"); }
     else{
 
         do{
@@ -46,6 +46,7 @@ void main(){
 
         // each player picks and puts card on the table
         for(int i = 0; i < totalPlayers; i++){
+            clearScreen();
             showPlayerCards(playersList[i], allPlayersCards);
             Card cardThrown = pickCard(playersList[i], allPlayersCards);
             cardsOnDesk[i] = cardThrown;
@@ -76,7 +77,8 @@ void main(){
         displayPlayers(totalPlayers, playersList);
 
         // auto save
-        char autoSave[15] = "autoSave";
+        // char autoSave[15] = "autoSave";
+        char autoSave[15] = AUTO_SAVE;
         saveGame(autoSave, round, totalPlayers, playersList, allPlayersCards);
 
         printf("Continue < Enter >\n");
