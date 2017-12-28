@@ -1,12 +1,16 @@
 #include "myUtils.h"
 
+
+/**
+*   Clears sctrean in terminal.
+*/
 void clearScreen(){
     for(int i = 0; i < 100; i++){ println(); }
 }
 
 
 /**
-*   runs until user enters space
+*   Runs until user enters space
 */
 void enterSpace(){
     char ch;
@@ -18,19 +22,33 @@ void enterSpace(){
     }
 }
 
+/**
+*   Adds new line
+*/
 void println(){
     printf("\n");
 }
 
-void addLog(char fileName[15]){
-    FILE* pFile;
-    pFile = fopen(MASTER_FILE, "a");
-    // pFile = fopen("autoSave.save", "w");
+/**
+*   Ask user to enter Yes or No
+*   Returns:
+*       1 if Yes
+*       0 if No
+*/
+int yesNo(){
+    char ch;
 
-    if (pFile == NULL){
-        printf("The file could not be opened\n"); }
-    else{
-        fprintf(pFile,"%s\n", fileName);
-        fclose(pFile);
+    while(1){
+        printf("(Yes/No)\n");
+        ch = getchar();
+
+        switch (ch) {
+            case 'y':
+            case 'Y':
+                return 1;
+            case 'n':
+            case 'N':
+                return 0;
+        }
     }
 }

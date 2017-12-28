@@ -8,6 +8,7 @@
 #include <time.h>
 #include <string.h>
 #include "myUtils.h"
+#include "myFile.h"
 
 #define CARDS_PER_PLAYER 13
 #define MAX_PALYERS 10
@@ -22,8 +23,6 @@
 
 #define SHOW 0
 #define VERBOSE 1
-
-
 
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/
@@ -43,20 +42,13 @@ void createNewDeck(Card newDeck[4][CARDS_IN_DECK]);
 void getRandomCards(Card palyerDeck[CARDS_PER_PLAYER]);
 void dealCards(int players, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-// void enterSpace();
 Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]);
 Player getWinner(int players, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]);
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
 void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
-int yesNo();
 void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-void saveGame(char fileName[15], int round, int totalPlayers,
-                            Player playersList[MAX_PALYERS],
-                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-int loadGame(int *round, int *totalPlayers, Player playersList[MAX_PALYERS],
-                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-void nameCards(Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+                            
 #endif
