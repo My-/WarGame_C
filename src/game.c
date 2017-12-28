@@ -319,8 +319,10 @@ void saveGame(char fileName[15], int round, int totalPlayers, Player playersList
     if (pFile == NULL){
         printf("The file could not be opened\n"); }
     else{
-        fprintf(pFile,"%d\n", round); // round
-        fprintf(pFile,"%d\n", totalPlayers); // total players
+        // write to file:
+        fprintf(pFile,"%d\n", round);
+        fprintf(pFile,"%d\n", totalPlayers);
+        fprintf(pFile,"%d\n", pointsToNextRound);
 
         // Player.id, Player.name, Player. points, ...
         for( int player = 0; player < totalPlayers; player++){
@@ -402,6 +404,7 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
 
     fscanf(pFile, "%d", pRound);
     fscanf(pFile, "%d", pTotalPlayers);
+    fscanf(pFile, "%d", pointsToNextRound);
 
     for(int player = 0; player < *pTotalPlayers; player++){
         fscanf(pFile, "%d", &playersList[player].id);
