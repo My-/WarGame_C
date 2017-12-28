@@ -1,8 +1,10 @@
-#ifndef MY_UTILS
-#define MY_UTILS
+#ifndef MY_FILE
+#define MY_FILE
 
 #include <stdio.h>
+#include <string.h>
 #include "game.h"
+#include "myUtils.h"
 
 
 #define MASTER_FILE "save.log"

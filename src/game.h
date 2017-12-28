@@ -8,21 +8,23 @@
 #include <time.h>
 #include <string.h>
 #include "myUtils.h"
-#include "myFile.h"
+// #include "myFile.h"
 
 #define CARDS_PER_PLAYER 13
 #define MAX_PALYERS 10
 #define CARDS_IN_DECK 13
 #define SUIT 4
 #define ROUNDS 13
+#define USED_CARD 0
 
 #define MAX_SAVES 10
 #define MAX_FILE_NAME_LENGHT 15
 #define AUTO_SAVE "autoSave"
 #define SAVE_LOG "save.log"
+#define MASTER_FILE "save.log"
 
 #define SHOW 0
-#define VERBOSE 1
+// #define VERBOSE 1
 
 
 // http://www.c4learn.com/c-programming/c-initializing-array-of-structure/
@@ -50,5 +52,11 @@ void displayCards(int limit, Card deck[100]);
 void displayPlayers(int limit, Player list[100]);
 void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
-                            
+void addLog(char fileName[15]);
+void saveGame(char fileName[15], int round, int totalPlayers,
+                            Player playersList[MAX_PALYERS],
+                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+int loadGame(int *round, int *totalPlayers, Player playersList[MAX_PALYERS],
+                            Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+
 #endif

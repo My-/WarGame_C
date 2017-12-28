@@ -1,4 +1,5 @@
 #include "myFile.h"
+// #include "myUtils.h"
 
 
 /**
@@ -48,7 +49,7 @@ void saveGame(char fileName[15], int round, int totalPlayers, Player playersList
 
 
 /**
-*   Load game part. (TODO: brake to the smaler parts)
+*   Load game. (TODO: if have time brake to the smaler parts)
 */
 int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){

@@ -12,8 +12,10 @@
 #include <math.h>
 #include <time.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "myUtils.h"
+#include "myFile.h"
 #include "game.h"
 
 void main(){
