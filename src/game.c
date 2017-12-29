@@ -1,12 +1,12 @@
 #include "game.h"
 
-int pointsToNextRound = 0;
+int pointsToNextRound = 0; // global variable
 
 /**
 *   Creates new card deck as 2D array. 4 suits(rows) each 13 cards(coloms).
 */
 void createNewDeck(Card newDeck[4][CARDS_IN_DECK]){
-    // hard coded card deck
+    // hard coded card deck(Linux)
     // Card cards[4][CARDS_IN_DECK] = {
     //     {
     //         {"🂲", 2}, {"🂳", 3}, {"🂴", 4}, {"🂵", 5}, {"🂶", 6}, {"🂷", 7}, {"🂸", 8}, {"🂹", 9},
@@ -26,6 +26,7 @@ void createNewDeck(Card newDeck[4][CARDS_IN_DECK]){
     //     }
     // };
 
+    // hard coded card deck(Windows)
     Card cards[4][CARDS_IN_DECK] = {
         {
             {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7}, {"8", 8}, {"9", 9},
@@ -175,7 +176,7 @@ Card pickCard(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]
 }
 
 /**
-*   Enter names for each player.
+*   Enter names for each player and store in given players list.
 */
 void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
     for(int i = 0; i < players; i++){
@@ -208,13 +209,14 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     printf("--Points(total): %d\n", totalPoints);
     #endif
 
+    // all cards are dublicates?
     if( totalPoints == points ){
         pointsToNextRound = points;
         Player p = {"no", -1, -1};
         return p;
     }
 
-    // if we here, we should have a winner
+    // if we here, we should have a winner(we have unique card)
     for(int i = 0; i < totalPlayers; i++){
         if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){ winPos = i; }
     }
@@ -232,13 +234,16 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     return playersList[winPos];
 }
 
-// Why recursive? because I can.
+/**
+*   counts points from given starting position.
+*   Why recursive? because I can.
+*/
 int getTotalPoints(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
     return startAt == totalPlayers ? 0 : cardsOnDesk[startAt].value +getTotalPoints(startAt +1, totalPlayers, cardsOnDesk);
 }
 
 /**
-*   Removes dublicates. Recursive calls
+*   Removes dublicates. Recursive function
 *   returns total points in dublicates
 */
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
@@ -258,30 +263,34 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
         }
     }
 
-    if( hasDubplicate ){
+    if( hasDubplicate ){  // if had dublicate mark initial value as used
         cardsOnDesk[startAt].value = USED_CARD;
         hasDubplicate++;
     }
 
+    // if no dublicate, hasDubplicate is 0 (zero), Multyply by zero gives zero.
     return hasDubplicate * current +removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
 }
 
 /**
-*   displays cards from given deck up to given limit.
+*   Displays cards from given deck up to given limit.
 */
 void displayCards(int limit, Card deck[100]){
     for(int i = 0; i < limit; i++){
-        #if defined VERBOSE
+        #if defined VERBOSE  // VERBOSE(debuging) mode prints more info
         printf("%s %d  ", deck[i].name, deck[i].value);
         #endif
 
-        #ifndef VERBOSE
+        #ifndef VERBOSE  // not debuging mode
         printf("%s  ", deck[i].name);
         #endif
     }
     println();
 }
 
+/**
+*   Displays players from given list up to given limit.
+*/
 void displayPlayers(int limit, Player list[100]){
     for(int i = 0; i < limit; i++){
         printf("\t%d points - %s(%d)\n", list[i].points, list[i].name, list[i].id);
@@ -289,6 +298,9 @@ void displayPlayers(int limit, Player list[100]){
     println();
 }
 
+/*
+*   Exit game dialog.
+*/
 void exitGame(int round, int totalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     printf("Do Yo want to save a current game progress?\n");
@@ -324,7 +336,7 @@ void addLog(char fileName[15]){
 void saveGame(char fileName[15], int round, int totalPlayers, Player playersList[MAX_PALYERS],
                                     Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
     FILE* pFile;
-    strcat(fileName, ".save");
+    strcat(fileName, ".save"); // add extension ".save" to the end of the file
     pFile = fopen(fileName, "w");
 
     if (pFile == NULL){
@@ -352,7 +364,7 @@ void saveGame(char fileName[15], int round, int totalPlayers, Player playersList
 
 
 /**
-*   Load game. (TODO: if have time brake to the smaler parts)
+*   Load game part.
 */
 int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]){
@@ -413,18 +425,22 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
 
     // if we here, it means file exist(and asume it has correct data)
 
+    // start reading:...
     fscanf(pFile, "%d", pRound);
     fscanf(pFile, "%d", pTotalPlayers);
     fscanf(pFile, "%d", &pointsToNextRound);
 
+    //  ...Players id, name, points...
     for(int player = 0; player < *pTotalPlayers; player++){
         fscanf(pFile, "%d", &playersList[player].id);
         fscanf(pFile, "%s", playersList[player].name);
         fscanf(pFile, "%d", &playersList[player].points);
 
+        // ...players cards.
         for( int card = 0; card < CARDS_PER_PLAYER; card++){
             fscanf(pFile, "%d", &allPlayersCards[player][card].value);
 
+            // give name to the card
             switch(allPlayersCards[player][card].value){
                 case 1: strcpy(allPlayersCards[player][card].name, "1"); break;
                 case 2: strcpy(allPlayersCards[player][card].name, "2"); break;
@@ -449,6 +465,9 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
     return 1;
 }
 
+/**
+*   Find and display games winner.
+*/
 void displayWinner(int totalPlayers, Player playersList[MAX_PALYERS]){
     int winPos = 0, maxPoints = 0;
     for(int i = 0; i < totalPlayers; i++){

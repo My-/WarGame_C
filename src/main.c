@@ -28,6 +28,7 @@ void main(){
     Card cardsOnDesk[MAX_PALYERS];
 
     isLoaded = loadGame(&round, &totalPlayers, playersList, allPlayersCards);
+
     if( isLoaded ){ printf("Game Loaded!\n"); }
     else{
 
@@ -62,7 +63,7 @@ void main(){
         }
         println();
 
-        Player winner = getWinner(totalPlayers, playersList, cardsOnDesk);
+        Player winner = getWinner(totalPlayers, playersList, cardsOnDesk); // Store winner. If no winner id = -1
 
         printf("At Round %d ", round +1);
         if( winner.id < 0 ){
@@ -107,7 +108,7 @@ void main(){
 
     }// round loop
 
-    displayWinner(totalPlayers, playersList);
+    displayWinner(totalPlayers, playersList); // prints game winner
 
     printf("\n\nEnter any integer to exit.\n", );
     int zxc; scanf("%d", &zxc); // Pause terminal window

@@ -1,14 +1,12 @@
 #ifndef GAME
 #define GAME
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
 #include "myUtils.h"
-// #include "myFile.h"
 
 #define CARDS_PER_PLAYER 13
 #define MAX_PALYERS 10
