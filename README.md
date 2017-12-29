@@ -1,7 +1,13 @@
 # WarGame_C
 C project - War Game
 
-### About:
+### About Project:
+ It's first semester C project. Or more precize my attempt to this project. Coding in C is like "building house with one hand". At least it how I feel. Maybe with more C knowlge it will be better.. We will see next semester.<br>
+ **Examples** folder contains code snipets not related to the project.<br>
+ **old** folder contains old code wich was once part of project. I keep it just for historical purposes.<br>
+ **src** folder is were project lives.
+
+ #### Some rules(more in pdf file):
 - How	the	program	should	operate:
 
     - Every	time	a	new	game	is	created	the	program	should	ask	how	many players	are	playing	and	the	player’s	cards	should	then be	randomly	generated.
@@ -22,7 +28,7 @@ C project - War Game
     - Roll over Points if no winner.
 > ALL	TIE	RULE:		If	all	cards	tie	another	(example	of	5	players:		_A,8,8,A,8_)	-	then	those	points	are	rolled	over	to	the	next	round	-	making	the	next	round	a	VERY	important	round.		If	a	tie	like	this	happens	on	the	last	round,	then	those	points	are	just	"lost	on	the	battlefield"
 
-### Steps:
+### Steps I planing to do:
 - **Players:**
  - Use `struct` to create player.
  - Store all players in array.
