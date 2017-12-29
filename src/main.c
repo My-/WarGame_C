@@ -110,6 +110,6 @@ void main(){
 
     displayWinner(totalPlayers, playersList); // prints game winner
 
-    printf("\n\nEnter any integer to exit.\n", );
+    printf("\n\nEnter any integer to exit.\n" );
     int zxc; scanf("%d", &zxc); // Pause terminal window
 }// main()
