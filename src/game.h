@@ -58,5 +58,7 @@ void saveGame(char fileName[15], int round, int totalPlayers,
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
 int loadGame(int *round, int *totalPlayers, Player playersList[MAX_PALYERS],
                             Card allPlayersCards[MAX_PALYERS][CARDS_PER_PLAYER]);
+int getTotalPoints(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]);
+void displayWinner(int totalPlayers, Player playersList[MAX_PALYERS]);
 
 #endif

@@ -198,39 +198,43 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
 *   Find the winner from given cards
 */
 Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]){
-    int points, winPos = 0, hasWinner = 0;
+    int totalPoints, points, winPos = 0, hasWinner = 1;
+
+    totalPoints = getTotalPoints(0, totalPlayers, cardsOnDesk);
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
+
     #if defined VERBOSE
     printf("--Points(from duplicates): %d\n", points);
+    printf("--Points(total): %d\n", totalPoints);
     #endif
 
-    for(int i = 0; i < totalPlayers; i++){
-        if( cardsOnDesk[i].value == USED_CARD ){ continue; }
-        if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){
-            winPos = i;
-            hasWinner = 1;
-        }
-        points += cardsOnDesk[i].value;
-    }
-
-    #if defined VERBOSE
-    printf("--Cards on desk: ");
-    displayCards(totalPlayers, cardsOnDesk);
-    printf("--Points: %d\n", points);
-    printf("--Points(from last round): %d\n", pointsToNextRound);
-    printf("--%s \n", (hasWinner ? "Has Winner" : "No Winner") );
-    #endif
-
-    if( hasWinner ){
-        playersList[winPos].points += points + pointsToNextRound;
-        pointsToNextRound = 0;
-    }else{
+    if( totalPoints == points ){
         pointsToNextRound = points;
         Player p = {"no", -1, -1};
         return p;
     }
 
+    // if we here, we should have a winner
+    for(int i = 0; i < totalPlayers; i++){
+        if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){ winPos = i; }
+    }
+
+    #if defined VERBOSE
+    printf("--Cards on desk: ");
+    displayCards(totalPlayers, cardsOnDesk);
+    printf("--Points(from last round): %d\n", pointsToNextRound);
+    printf("--%s \n", (hasWinner ? "Has Winner" : "No Winner") );
+    #endif
+
+    playersList[winPos].points += totalPoints + pointsToNextRound;
+    pointsToNextRound = 0;
+
     return playersList[winPos];
+}
+
+// Why recursive? because I can.
+int getTotalPoints(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
+    return startAt == totalPlayers ? 0 : cardsOnDesk[startAt].value +getTotalPoints(startAt +1, totalPlayers, cardsOnDesk);
 }
 
 /**
@@ -238,9 +242,6 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
 *   returns total points in dublicates
 */
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
-    #if defined VERBOSE
-    printf("----removeDublicates(startAt:%d, totalPlayers:%d,cardsOnDesk.value:%d)\n", startAt, totalPlayers, cardsOnDesk[startAt].value );
-    #endif
     if( startAt == totalPlayers ){ return 0; } // recurcion ending condition
     if( cardsOnDesk[startAt].value == USED_CARD ){
         return removeDublicates(startAt +1, totalPlayers, cardsOnDesk); // skip used cards
@@ -254,23 +255,14 @@ int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS
         if( current == cardsOnDesk[i].value ){
             cardsOnDesk[i].value = USED_CARD;
             hasDubplicate++;
-            #if defined VERBOSE
-            printf("----Dublicate-1: [%d](%d)\n", i, current );
-            #endif
         }
     }
 
     if( hasDubplicate ){
         cardsOnDesk[startAt].value = USED_CARD;
         hasDubplicate++;
-        #if defined VERBOSE
-        printf("----Dublicate-2: %d? (%d)\n", hasDubplicate, current );
-        #endif
     }
 
-    #if defined VERBOSE
-    printf("----Before return: (hasDubplicate:%d * current:%d = %d)\n", hasDubplicate, current, (hasDubplicate * current) );
-    #endif
     return hasDubplicate * current +removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
 }
 
@@ -455,4 +447,16 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
 
     fclose(pFile);
     return 1;
+}
+
+void displayWinner(int totalPlayers, Player playersList[MAX_PALYERS]){
+    int winPos = 0, maxPoints = 0;
+    for(int i = 0; i < totalPlayers; i++){
+        if( playersList[i].points > maxPoints ){
+            winPos = i;
+            maxPoints = playersList[i].points;
+        }
+    }
+
+    printf("\n\n\t\tGAME WINNER IS: %s with %d points!!\n", playersList[winPos].name, playersList[winPos].points);
 }

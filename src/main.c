@@ -105,9 +105,10 @@ void main(){
         if( input == 'x'){
             exitGame(round, totalPlayers, playersList, allPlayersCards); }
 
-    }// for round loop
+    }// round loop
 
+    displayWinner(totalPlayers, playersList);
 
-
+    printf("\n\nEnter any integer to exit.\n", );
     int zxc; scanf("%d", &zxc); // Pause terminal window
 }// main()
