@@ -15,7 +15,6 @@
 #include <ctype.h>
 
 #include "myUtils.h"
-#include "myFile.h"
 #include "game.h"
 
 void main(){
@@ -42,7 +41,7 @@ void main(){
     }
 
     // each loop is one round
-    for(  ; round < ROUNDS; round++){ // Why not while loop? I like increase variable here
+    while(round < ROUNDS){
         printf("\n================================================================\n" );
         printf("Round %d\n", round +1);
 
@@ -79,13 +78,13 @@ void main(){
         displayPlayers(totalPlayers, playersList);
 
         // auto save
-        // char autoSave[15] = "autoSave";
         char autoSave[15] = AUTO_SAVE;
-        saveGame(autoSave, round, totalPlayers, playersList, allPlayersCards);
+        saveGame(autoSave, ++round, totalPlayers, playersList, allPlayersCards);
 
         printf("Continue < Enter >\n");
         printf("Exit < x + Enter >\n");
 
+        // continue/exit validation
         char input;
         int invalid = 1;
         do{
