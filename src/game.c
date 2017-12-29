@@ -141,9 +141,9 @@ void showPlayerCards(Player player, Card allPlayersCards[MAX_PALYERS][CARDS_PER_
     // print player cards
     for(int i = 0; i < CARDS_PER_PLAYER; i++){
         if( allPlayersCards[player.id][i].value == USED_CARD ){
-            printf("%s    ", "_");
+            printf("%2s   ", "_");
         }else{
-            printf("%s    ", allPlayersCards[player.id][i].name );
+            printf("%2s   ", allPlayersCards[player.id][i].name );
         }
     }
     println();
@@ -201,11 +201,6 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     int points, winPos = 0, hasWinner = 0;
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
 
-    #if defined VERBOSE
-    displayCards(totalPlayers, cardsOnDesk);
-    printf("Points(from duplicates): %d\n", points);
-    #endif
-    //
     for(int i = 0; i < totalPlayers; i++){
         if( cardsOnDesk[i].value == USED_CARD ){ continue; }
         if( cardsOnDesk[winPos].value < cardsOnDesk[i].value ){
@@ -214,6 +209,14 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
         }
         points += cardsOnDesk[i].value;
     }
+
+    #if defined VERBOSE
+    printf("--Cards on desk: ");
+    displayCards(totalPlayers, cardsOnDesk);
+    printf("--Points(from duplicates): %d\n", points);
+    printf("--Points(from last round): %d\n", pointsToNextRound);
+    printf("--%s \n", (hasWinner ? "Has Winner" : "No Winner") );
+    #endif
 
     if( hasWinner ){
         playersList[winPos].points += points + pointsToNextRound;
@@ -404,7 +407,7 @@ int loadGame(int *pRound, int *pTotalPlayers, Player playersList[MAX_PALYERS],
 
     fscanf(pFile, "%d", pRound);
     fscanf(pFile, "%d", pTotalPlayers);
-    fscanf(pFile, "%d", pointsToNextRound);
+    fscanf(pFile, "%d", &pointsToNextRound);
 
     for(int player = 0; player < *pTotalPlayers; player++){
         fscanf(pFile, "%d", &playersList[player].id);
