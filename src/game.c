@@ -200,6 +200,9 @@ void enterPlayersNames(int players, Player playersList[MAX_PALYERS]){
 Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOnDesk[MAX_PALYERS]){
     int points, winPos = 0, hasWinner = 0;
     points = removeDublicates(0, totalPlayers, cardsOnDesk);
+    #if defined VERBOSE
+    printf("--Points(from duplicates): %d\n", points);
+    #endif
 
     for(int i = 0; i < totalPlayers; i++){
         if( cardsOnDesk[i].value == USED_CARD ){ continue; }
@@ -213,7 +216,7 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
     #if defined VERBOSE
     printf("--Cards on desk: ");
     displayCards(totalPlayers, cardsOnDesk);
-    printf("--Points(from duplicates): %d\n", points);
+    printf("--Points: %d\n", points);
     printf("--Points(from last round): %d\n", pointsToNextRound);
     printf("--%s \n", (hasWinner ? "Has Winner" : "No Winner") );
     #endif
@@ -235,27 +238,40 @@ Player getWinner(int totalPlayers, Player playersList[MAX_PALYERS], Card cardsOn
 *   returns total points in dublicates
 */
 int removeDublicates(int startAt, int totalPlayers, Card cardsOnDesk[MAX_PALYERS]){
-    if( startAt == totalPlayers ){ return 0; }
+    #if defined VERBOSE
+    printf("----removeDublicates(startAt:%d, totalPlayers:%d,cardsOnDesk.value:%d)\n", startAt, totalPlayers, cardsOnDesk[startAt].value );
+    #endif
+    if( startAt == totalPlayers ){ return 0; } // recurcion ending condition
     if( cardsOnDesk[startAt].value == USED_CARD ){
-        return removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
+        return removeDublicates(startAt +1, totalPlayers, cardsOnDesk); // skip used cards
     }
 
     int current = cardsOnDesk[startAt].value;
     int hasDubplicate = 0;
 
+    // check if has dublicate
     for(int i = startAt +1; i < totalPlayers; i++){
         if( current == cardsOnDesk[i].value ){
             cardsOnDesk[i].value = USED_CARD;
             hasDubplicate++;
+            #if defined VERBOSE
+            printf("----Dublicate-1: [%d](%d)\n", i, current );
+            #endif
         }
     }
 
     if( hasDubplicate ){
         cardsOnDesk[startAt].value = USED_CARD;
         hasDubplicate++;
+        #if defined VERBOSE
+        printf("----Dublicate-2: %d? (%d)\n", hasDubplicate, current );
+        #endif
     }
 
-    return hasDubplicate *current +removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
+    #if defined VERBOSE
+    printf("----Before return: (hasDubplicate:%d * current:%d = %d)\n", hasDubplicate, current, (hasDubplicate * current) );
+    #endif
+    return hasDubplicate * current +removeDublicates(startAt +1, totalPlayers, cardsOnDesk);
 }
 
 /**
